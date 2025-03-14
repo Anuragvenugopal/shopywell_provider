@@ -1,0 +1,76 @@
+{
+  "project_info": {
+    "project_number": "849818403039",
+    "project_id": "shopywell-acb8b",
+    "storage_bucket": "shopywell-acb8b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:849818403039:android:c2b02d04cedb4d34f2296a",
+        "android_client_info": {
+          "package_name": "com.example.shopywell"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "849818403039-apk52pe7emvde9cqrvs44s2k51bq2vvq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.shopywell",
+            "certificate_hash": "0aaf4776afc18dab102365abcd47ec81a3276a3f"
+          }
+        },
+        {
+          "client_id": "849818403039-catph34b04pcge522uinckiifkop6i3n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXalFpMba9D9FYoeVQrzB7U72h2AOZdto"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "849818403039-catph34b04pcge522uinckiifkop6i3n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:849818403039:android:727a1100ab61d6f1f2296a",
+        "android_client_info": {
+          "package_name": "com.example.shopywelll"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "849818403039-catph34b04pcge522uinckiifkop6i3n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXalFpMba9D9FYoeVQrzB7U72h2AOZdto"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "849818403039-catph34b04pcge522uinckiifkop6i3n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
