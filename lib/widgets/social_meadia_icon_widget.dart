@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shopywelll/screens/get_started_page.dart';
 
 import '../screens/bottom_nav_screen.dart';
 import '../utils/app_colors.dart';
@@ -39,7 +40,7 @@ class _SocialMediaIconWidgetState extends State<SocialMeadiaIconWidget> {
 
       if (mounted) {
         Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => BottomNavScreen()),
+          MaterialPageRoute(builder: (context) => GetStartedPage()),
               (route) => false,
         );
       }

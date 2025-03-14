@@ -27,7 +27,6 @@ class _CheckoutPage1State extends State<CheckoutPage1> {
     try {
       paymentIntent = await createPaymentIntent();
 
-      // Confirm the payment
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
           paymentIntentClientSecret: paymentIntent!['client_secret'],
@@ -37,8 +36,6 @@ class _CheckoutPage1State extends State<CheckoutPage1> {
       );
 
       await Stripe.instance.presentPaymentSheet();
-
-      // Payment successful
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Payment Successful!")),
       );
@@ -128,7 +125,12 @@ class _CheckoutPage1State extends State<CheckoutPage1> {
             SizedBox(height: 16),
             Divider(color: AppColors.grey),
             SizedBox(height: 16),
-            Text("Payment", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            BuildTextWidget(
+              text: 'Payment',
+              color: AppColors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
             SizedBox(height: 8),
             Column(
               children: [
@@ -160,9 +162,7 @@ class _CheckoutPage1State extends State<CheckoutPage1> {
             BuildElivatedButtonWidget(
               text: "Continue",
               onPressed: () async {
-                // await makePayment();
                 await StripePaymentService.makePayment();
-
               },
               color: AppColors.button_color,
             ),

@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-
 import '../screens/product_view_page.dart';
 import '../utils/app_colors.dart';
 import 'build_text_widget.dart';
@@ -13,6 +12,7 @@ class ProductListWidget extends StatefulWidget {
 
 class _ProductListWidgetState extends State<ProductListWidget> {
   List<Map<String, dynamic>> products = [];
+  bool isLoading = true;
 
   Future<void> fetchProducts() async {
     try {
@@ -26,15 +26,19 @@ class _ProductListWidgetState extends State<ProductListWidget> {
           "name": data["name"] ?? "No Name",
           "price": data["price"]?.toString() ?? "\$0",
           "image": data["image"] ?? "",
-          "description": data["description"] ?? "No description", // Correct key
+          "discription": data["discription"] ?? "No description",
         };
       }).toList();
 
       setState(() {
         products = fetchedProducts;
+        isLoading = false;
       });
     } catch (e) {
       print("Error fetching products: $e");
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -46,8 +50,10 @@ class _ProductListWidgetState extends State<ProductListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return products.isEmpty
-        ? Center(child: CircularProgressIndicator())
+    return isLoading
+        ? Center(child: CircularProgressIndicator(color: AppColors.red,))
+        : products.isEmpty
+        ? Center(child: Text("No products available"))
         : GridView.builder(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -69,7 +75,7 @@ class _ProductListWidgetState extends State<ProductListWidget> {
                   name: products[index]["name"],
                   price: products[index]["price"],
                   image: products[index]["image"],
-                  description: products[index]["description"], // Correct key
+                  description: products[index]["discription"],
                 ),
               ),
             );
@@ -84,8 +90,8 @@ class _ProductListWidgetState extends State<ProductListWidget> {
               children: [
                 Flexible(
                   child: ClipRRect(
-                    borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(10)),
+                    borderRadius:
+                    BorderRadius.vertical(top: Radius.circular(10)),
                     child: Container(
                       width: double.infinity,
                       height: MediaQuery.of(context).size.height * 0.25,
@@ -122,8 +128,8 @@ class _ProductListWidgetState extends State<ProductListWidget> {
                           ),
                           SizedBox(height: 4),
                           BuildTextWidget(
-                            text: products[index]["description"] ??
-                                "No description", // Correct key
+                            text: products[index]["discription"] ??
+                                "No description",
                             fontSize: 12,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,

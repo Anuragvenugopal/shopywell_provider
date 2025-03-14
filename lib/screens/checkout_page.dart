@@ -17,6 +17,7 @@ class CheckoutPage extends StatefulWidget {
     required this.productPrice,
     required this.productImage,
     required this.description,
+    required String price,
   });
 
   @override

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shopywelll/widgets/build_text_widget.dart';
 
 import '../utils/app_colors.dart';
 import '../widgets/build_elivated_button_widget.dart';
@@ -27,7 +28,6 @@ class ProductViewPage extends StatefulWidget {
 
 class _ProductViewPageState extends State<ProductViewPage> {
   List<String> productImages = [];
-
 
   @override
   void initState() {
@@ -65,19 +65,23 @@ class _ProductViewPageState extends State<ProductViewPage> {
                       print("Selected Size: $selectedSize");
                     },
                   ),
-                  Text(
-                    widget.name,
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  BuildTextWidget(
+                    text: widget.name,
+                    color: AppColors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
                   ),
                   SizedBox(height: 5),
-                  Text(
-                    widget.price,
-                    style: TextStyle(fontSize: 18, color: Colors.red),
+                  BuildTextWidget(
+                    text: widget.price,
+                    color: AppColors.red,
+                    fontSize: 18,
                   ),
                   SizedBox(height: 10),
-                  Text(
-                    widget.description,
-                    style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                  BuildTextWidget(
+                    text: widget.description,
+                    color: AppColors.grey_light,
+                    fontSize: 14,
                   ),
                 ],
               ),
@@ -100,17 +104,15 @@ class _ProductViewPageState extends State<ProductViewPage> {
                       text: 'Buy Now',
                       onPressed: () {
                         Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CheckoutPage(
-                              productName: widget.name,
-                              productPrice: widget.price,
-                              productImage: widget.image,
-                              description: widget.description,
-                              // size: _selectedSize,
-                            ),
-                          ),
-                        );
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CheckoutPage(
+                                  productName: widget.name,
+                                  productPrice: widget.price,
+                                  productImage: widget.image,
+                                  description: widget.description,
+                                  price: widget.price),
+                            ));
                       },
                       color: AppColors.green,
                       height: 40,

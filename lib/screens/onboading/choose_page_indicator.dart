@@ -31,6 +31,15 @@ class _ChoosePageIndicatorPageState extends State<ChoosePageIndicator> {
     }
   }
 
+  void prevPage() {
+    if (currentPage > 0) {
+      pageController.previousPage(
+        duration: Duration(milliseconds: 500),
+        curve: Curves.ease,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,33 +82,42 @@ class _ChoosePageIndicatorPageState extends State<ChoosePageIndicator> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween, // Align buttons properly
                 children: [
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: List.generate(3, (index) {
-                          bool isActive = currentPage == index;
-                          return AnimatedContainer(
-                            duration: Duration(milliseconds: 300),
-                            margin: EdgeInsets.symmetric(horizontal: 4),
-                            width: isActive ? 40 : 10,
-                            height: 10,
-                            decoration: BoxDecoration(
-                              color: isActive ? AppColors.black : AppColors.black_light,
-                              borderRadius: BorderRadius.circular(isActive ? 5 : 50),
-                            ),
-                          );
-                        }),
+                  if (currentPage > 0)
+                    TextButton(
+                      onPressed: prevPage,
+                      child: BuildTextWidget(
+                        text: "Prev",
+                        fontSize: 15,
+                        color: AppColors.grey,
+                        fontWeight: FontWeight.bold,
                       ),
-                    ),
+                    )
+                  else
+                    SizedBox(width: 60),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: List.generate(3, (index) {
+                      bool isActive = currentPage == index;
+                      return AnimatedContainer(
+                        duration: Duration(milliseconds: 300),
+                        margin: EdgeInsets.symmetric(horizontal: 4),
+                        width: isActive ? 40 : 10,
+                        height: 10,
+                        decoration: BoxDecoration(
+                          color: isActive ? AppColors.black : AppColors.black_light,
+                          borderRadius: BorderRadius.circular(isActive ? 5 : 50),
+                        ),
+                      );
+                    }),
                   ),
+
                   TextButton(
                     onPressed: nextPage,
                     child: BuildTextWidget(
-                      text: "Next",
-                      fontSize: 16,
+                      text: currentPage == 2 ? "Get Started" : "Next",
+                      fontSize: 15,
                       color: AppColors.red,
                       fontWeight: FontWeight.bold,
                     ),

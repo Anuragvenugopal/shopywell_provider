@@ -9,15 +9,17 @@ class BuildTextFeildWidget extends StatefulWidget {
   final Widget? suffixIcon;
   final bool obscureText;
   final Color? fillColor;
+  final String? Function(String?)? validator;
 
   const BuildTextFeildWidget({
     super.key,
     this.controller,
-     this.hintText,
+    this.hintText,
     this.prefixIcon,
     this.suffixIcon,
     this.obscureText = false,
     this.fillColor,
+    this.validator,
   });
 
   @override
@@ -33,17 +35,17 @@ class _BuildTextFieldWidgetState extends State<BuildTextFeildWidget> {
     return SizedBox(
       width: screenWidth * 0.9,
       height: screenHeight * 0.07,
-      child: TextField(
+      child: TextFormField(
         controller: widget.controller,
         obscureText: widget.obscureText,
-        style: TextStyle(color: AppColors.black,fontWeight: FontWeight.w400),
+        style: TextStyle(color: AppColors.black, fontWeight: FontWeight.w400),
         decoration: InputDecoration(
           hintText: widget.hintText,
-          hintStyle: TextStyle(fontSize: screenWidth * 0.04,),
+          hintStyle: TextStyle(fontSize: screenWidth * 0.04),
           filled: true,
           fillColor: widget.fillColor ?? Colors.grey[200],
           prefixIcon: widget.prefixIcon != null
-              ? Icon(widget.prefixIcon, color: AppColors.grey_light, size: screenWidth * 0.06)
+              ? Icon(widget.prefixIcon, color: AppColors.grey_light, size: screenWidth * 0.06 )
               : null,
           suffixIcon: widget.suffixIcon,
           border: OutlineInputBorder(
@@ -59,6 +61,7 @@ class _BuildTextFieldWidgetState extends State<BuildTextFeildWidget> {
             borderSide: BorderSide(color: AppColors.red, width: 2),
           ),
         ),
+        validator: widget.validator,
       ),
     );
   }

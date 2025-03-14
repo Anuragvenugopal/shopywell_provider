@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:shopywelll/widgets/build_text_widget.dart';
 
 import '../utils/app_colors.dart';
 import '../widgets/build_elivated_button_widget.dart';
 import 'check_out_page1.dart';
-
 
 class PlaceOrderPage extends StatefulWidget {
   final String productName;
@@ -253,7 +253,7 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
       bottomNavigationBar: Container(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 50),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.white,
           border: Border.all(color: AppColors.grey),
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(16),
@@ -269,14 +269,18 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "₹${widget.productPrice}",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    BuildTextWidget(
+                      text: widget.productPrice,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.black,
                     ),
                     SizedBox(height: 4),
-                    Text(
-                      "View Details",
-                      style: TextStyle(fontSize: 14, color: Colors.red),
+                    BuildTextWidget(
+                      text:'View Details',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.red,
                     ),
                   ],
                 ),
@@ -286,9 +290,13 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
                     child: BuildElivatedButtonWidget(
                       text: 'Proceed to Payment',
                       onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => CheckoutPage1(
-                          productPrice: widget.productPrice,
-                        ),));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CheckoutPage1(
+                                productPrice: widget.productPrice,
+                              ),
+                            ));
                       },
                       color: AppColors.button_color,
                     ),
@@ -302,4 +310,3 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
     );
   }
 }
-

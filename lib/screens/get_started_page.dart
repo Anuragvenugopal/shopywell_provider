@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../utils/app_colors.dart';
 import '../widgets/build_elivated_button_widget.dart';
 import '../widgets/build_text_widget.dart';
+import 'bottom_nav_screen.dart';
 import 'home_page.dart';
 
 
@@ -72,7 +73,7 @@ class _GetStartedPageState extends State<GetStartedPage> {
                 BuildElivatedButtonWidget(
                   text: 'Get Started',
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(),));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => BottomNavScreen(),));
                   },
                   textSize: 20,
                   width: screenWidth / 1.3,
