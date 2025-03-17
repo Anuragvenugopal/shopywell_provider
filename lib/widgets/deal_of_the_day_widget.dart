@@ -1,21 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:shopywelll/widgets/build_text_widget.dart';
-
 import '../utils/app_colors.dart';
 
-class DealOfTheDayWidget extends StatefulWidget {
-  @override
-  _DealOfTheDayWidgetState createState() => _DealOfTheDayWidgetState();
-}
-
-class _DealOfTheDayWidgetState extends State<DealOfTheDayWidget> {
+class DealOfTheDayWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Color(0xFF409CFF), // Adjusted blue color
+        color: Color(0xFF409CFF),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
@@ -39,7 +33,6 @@ class _DealOfTheDayWidgetState extends State<DealOfTheDayWidget> {
                     fontSize: 14,
                     color: AppColors.white,
                   ),
-
                 ],
               ),
             ],
@@ -49,7 +42,8 @@ class _DealOfTheDayWidgetState extends State<DealOfTheDayWidget> {
             style: OutlinedButton.styleFrom(
               side: BorderSide(color: AppColors.white),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5)),
+                borderRadius: BorderRadius.circular(5),
+              ),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,

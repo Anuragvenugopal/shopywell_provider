@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
+
+import '../../provider/create_an_account_provider.dart';
 import '../../utils/app_colors.dart';
 import '../../widgets/build_elivated_button_widget.dart';
 import '../../widgets/build_text_feild_widget.dart';
@@ -7,57 +9,10 @@ import '../../widgets/build_text_widget.dart';
 import '../../widgets/social_meadia_icon_widget.dart';
 import '../../widgets/terms_text_widget.dart';
 
-class CreateAnAccountPage extends StatefulWidget {
-  @override
-  State<CreateAnAccountPage> createState() => _CreateAnAccountPageState();
-}
-
-class _CreateAnAccountPageState extends State<CreateAnAccountPage> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool isPasswordVisible = false;
-  bool isConfirmPasswordVisible = false;
-
-  void _createAccount() async {
-    if (_formKey.currentState!.validate()) {
-      try {
-        String email = emailController.text.trim();
-        String password = passwordController.text.trim();
-
-        UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-          email: email,
-          password: password,
-        );
-
-        if (userCredential.user != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Account created successfully!")),
-          );
-          Navigator.pop(context);
-        }
-      } on FirebaseAuthException catch (e) {
-        String message = "An error occurred.";
-        if (e.code == 'email-already-in-use') {
-          message = "This email is already in use.";
-        } else if (e.code == 'weak-password') {
-          message = "Password must be at least 6 characters.";
-        } else if (e.code == 'invalid-email') {
-          message = "Invalid email format.";
-        }
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error: $message")),
-        );
-      }
-    }
-  }
-
-
-
+class CreateAnAccountPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<CreateAccountProvider>(context);
     final double screenHeight = MediaQuery.of(context).size.height;
     final double screenWidth = MediaQuery.of(context).size.width;
 
@@ -68,7 +23,7 @@ class _CreateAnAccountPageState extends State<CreateAnAccountPage> {
           padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
           child: SingleChildScrollView(
             child: Form(
-              key: _formKey,
+              key: provider.formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -84,7 +39,7 @@ class _CreateAnAccountPageState extends State<CreateAnAccountPage> {
                   ),
                   SizedBox(height: screenHeight * 0.04),
                   BuildTextFeildWidget(
-                    controller: emailController,
+                    controller: provider.emailController,
                     hintText: "Username or Email",
                     prefixIcon: Icons.person_outline,
                     validator: (value) {
@@ -95,23 +50,18 @@ class _CreateAnAccountPageState extends State<CreateAnAccountPage> {
                       }
                       return null;
                     },
-
                   ),
                   SizedBox(height: screenHeight * 0.04),
                   BuildTextFeildWidget(
-                    controller: passwordController,
+                    controller: provider.passwordController,
                     hintText: "Password",
                     prefixIcon: Icons.lock_outline,
-                    obscureText: !isPasswordVisible,
+                    obscureText: !provider.isPasswordVisible,
                     suffixIcon: IconButton(
                       icon: Icon(
-                        isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                        provider.isPasswordVisible ? Icons.visibility : Icons.visibility_off,
                       ),
-                      onPressed: () {
-                        setState(() {
-                          isPasswordVisible = !isPasswordVisible;
-                        });
-                      },
+                      onPressed: provider.togglePasswordVisibility,
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -124,24 +74,20 @@ class _CreateAnAccountPageState extends State<CreateAnAccountPage> {
                   ),
                   SizedBox(height: screenHeight * 0.04),
                   BuildTextFeildWidget(
-                    controller: confirmPasswordController,
+                    controller: provider.confirmPasswordController,
                     hintText: "Confirm Password",
                     prefixIcon: Icons.lock_outline,
-                    obscureText: !isConfirmPasswordVisible,
+                    obscureText: !provider.isConfirmPasswordVisible,
                     suffixIcon: IconButton(
                       icon: Icon(
-                        isConfirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                        provider.isConfirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
                       ),
-                      onPressed: () {
-                        setState(() {
-                          isConfirmPasswordVisible = !isConfirmPasswordVisible;
-                        });
-                      },
+                      onPressed: provider.toggleConfirmPasswordVisibility,
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "Please confirm your password";
-                      } else if (value != passwordController.text) {
+                      } else if (value != provider.passwordController.text) {
                         return "Passwords do not match";
                       }
                       return null;
@@ -159,9 +105,11 @@ class _CreateAnAccountPageState extends State<CreateAnAccountPage> {
                     ),
                   ),
                   SizedBox(height: screenHeight * 0.04),
-                  BuildElivatedButtonWidget(
+                  provider.isLoading
+                      ? CircularProgressIndicator()
+                      : BuildElivatedButtonWidget(
                     text: "Create Account",
-                    onPressed: _createAccount,
+                    onPressed: () => provider.createAccount(context),
                     color: AppColors.button_color,
                   ),
                   SizedBox(height: screenHeight * 0.04),

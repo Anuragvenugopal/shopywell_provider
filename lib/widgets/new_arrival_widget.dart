@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shopywelll/widgets/product_list_widget.dart';
 
-class NewArrivalsWidget extends StatefulWidget {
+class NewArrivalsWidget extends StatelessWidget {
   const NewArrivalsWidget({Key? key}) : super(key: key);
 
-  @override
-  State<NewArrivalsWidget> createState() => _NewArrivalsWidgetState();
-}
-
-class _NewArrivalsWidgetState extends State<NewArrivalsWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(

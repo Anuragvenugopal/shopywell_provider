@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shopywelll/screens/profile_page.dart';
@@ -13,12 +12,7 @@ import '../widgets/product_list_widget.dart';
 import '../widgets/special_offer_widget.dart';
 import '../widgets/trending_product_widget.dart';
 
-class HomePage extends StatefulWidget {
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
+class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
@@ -50,7 +44,7 @@ class _HomePageState extends State<HomePage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ProfilePage(
-                      profileImage: user!.photoURL,
+                      profileImage: user.photoURL,
                     ),
                   ),
                 );
@@ -61,7 +55,7 @@ class _HomePageState extends State<HomePage> {
             child: CircleAvatar(
               backgroundColor: AppColors.grey,
               backgroundImage:
-                  user?.photoURL != null ? NetworkImage(user!.photoURL!) : null,
+              user?.photoURL != null ? NetworkImage(user!.photoURL!) : null,
               child: user?.photoURL == null
                   ? Icon(Icons.person, color: Colors.black)
                   : null,
@@ -81,8 +75,8 @@ class _HomePageState extends State<HomePage> {
                 decoration: InputDecoration(
                   hintText: "Search any Product...",
                   hintStyle: TextStyle(color: AppColors.grey),
-                  prefixIcon: Icon(Icons.search,color: AppColors.grey,),
-                  suffixIcon: Icon(Icons.mic,color: AppColors.grey,),
+                  prefixIcon: Icon(Icons.search, color: AppColors.grey),
+                  suffixIcon: Icon(Icons.mic, color: AppColors.grey),
                   filled: true,
                   fillColor: AppColors.white,
                   border: OutlineInputBorder(
@@ -106,49 +100,9 @@ class _HomePageState extends State<HomePage> {
                   ),
                   Row(
                     children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 4,
-                              spreadRadius: 1,
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          children: [
-                            BuildTextWidget(text: 'Sort',color: AppColors.black,fontSize: 14,fontWeight: FontWeight.w500,),
-                            SizedBox(width: 5),
-                            Icon(Icons.swap_vert, color: Colors.black, size: 18),
-                          ],
-                        ),
-                      ),
+                      _buildOptionButton('Sort', Icons.swap_vert),
                       SizedBox(width: 10),
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: AppColors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 4,
-                              spreadRadius: 1,
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          children: [
-                            BuildTextWidget(text: 'Filter',color: AppColors.black,fontSize: 14,fontWeight: FontWeight.w500,),
-                            SizedBox(width: 5),
-                            Icon(Icons.filter_list, color: Colors.black, size: 18),
-                          ],
-                        ),
-                      ),
+                      _buildOptionButton('Filter', Icons.filter_list),
                     ],
                   ),
                 ],
@@ -170,6 +124,35 @@ class _HomePageState extends State<HomePage> {
             NewArrivalsWidget(),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildOptionButton(String text, IconData icon) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 4,
+            spreadRadius: 1,
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          BuildTextWidget(
+            text: text,
+            color: AppColors.black,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
+          SizedBox(width: 5),
+          Icon(icon, color: Colors.black, size: 18),
+        ],
       ),
     );
   }

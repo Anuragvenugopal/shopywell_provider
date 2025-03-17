@@ -1,58 +1,19 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../provider/product_provider.dart';
 import '../screens/product_view_page.dart';
 import '../utils/app_colors.dart';
 import 'build_text_widget.dart';
 
-class ProductListWidget extends StatefulWidget {
-  @override
-  _ProductListWidgetState createState() => _ProductListWidgetState();
-}
-
-class _ProductListWidgetState extends State<ProductListWidget> {
-  List<Map<String, dynamic>> products = [];
-  bool isLoading = true;
-
-  Future<void> fetchProducts() async {
-    try {
-      QuerySnapshot snapshot =
-      await FirebaseFirestore.instance.collection('products').get();
-
-      List<Map<String, dynamic>> fetchedProducts = snapshot.docs.map((doc) {
-        var data = doc.data() as Map<String, dynamic>;
-
-        return {
-          "name": data["name"] ?? "No Name",
-          "price": data["price"]?.toString() ?? "\$0",
-          "image": data["image"] ?? "",
-          "discription": data["discription"] ?? "No description",
-        };
-      }).toList();
-
-      setState(() {
-        products = fetchedProducts;
-        isLoading = false;
-      });
-    } catch (e) {
-      print("Error fetching products: $e");
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    fetchProducts();
-  }
-
+class ProductListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return isLoading
-        ? Center(child: CircularProgressIndicator(color: AppColors.red,))
-        : products.isEmpty
+    final productProvider = Provider.of<ProductProvider>(context);
+
+    return productProvider.isLoading
+        ? Center(child: CircularProgressIndicator(color: AppColors.red))
+        : productProvider.products.isEmpty
         ? Center(child: Text("No products available"))
         : GridView.builder(
       shrinkWrap: true,
@@ -64,18 +25,19 @@ class _ProductListWidgetState extends State<ProductListWidget> {
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
       ),
-      itemCount: products.length,
+      itemCount: productProvider.products.length,
       itemBuilder: (context, index) {
+        var product = productProvider.products[index];
         return GestureDetector(
           onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => ProductViewPage(
-                  name: products[index]["name"],
-                  price: products[index]["price"],
-                  image: products[index]["image"],
-                  description: products[index]["discription"],
+                  name: product["name"],
+                  price: product["price"],
+                  image: product["image"],
+                  description: product["discription"],
                 ),
               ),
             );
@@ -96,7 +58,7 @@ class _ProductListWidgetState extends State<ProductListWidget> {
                       width: double.infinity,
                       height: MediaQuery.of(context).size.height * 0.25,
                       child: Image.network(
-                        products[index]["image"],
+                        product["image"],
                         width: double.infinity,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
@@ -115,20 +77,20 @@ class _ProductListWidgetState extends State<ProductListWidget> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           BuildTextWidget(
-                            text: products[index]["name"] ?? "No Name",
+                            text: product["name"] ?? "No Name",
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: AppColors.primaryColor,
                           ),
                           BuildTextWidget(
-                            text: products[index]["price"] ?? "\$0",
+                            text: product["price"] ?? "\$0",
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                             color: AppColors.black,
                           ),
                           SizedBox(height: 4),
                           BuildTextWidget(
-                            text: products[index]["discription"] ??
+                            text: product["discription"] ??
                                 "No description",
                             fontSize: 12,
                             maxLines: 2,

@@ -1,28 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:provider/provider.dart';
 import 'package:shopywelll/utils/app_colors.dart';
 
-class CarosilSliderWidget extends StatefulWidget {
-  @override
-  _CarosilSliderWidgetState createState() => _CarosilSliderWidgetState();
-}
+import '../provider/carosil_provider.dart';
 
-class _CarosilSliderWidgetState extends State<CarosilSliderWidget> {
+class CarosilSliderWidget extends StatelessWidget {
   final List<String> bannerImages = [
     "assets/images/carosil_imgage1.png",
     "assets/images/carosil_imgage1.png",
     "assets/images/carosil_imgage1.png",
   ];
 
-  int _currentIndex = 0;
-
   @override
   Widget build(BuildContext context) {
+    final carouselProvider = Provider.of<CarouselProvider>(context);
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
-          width: MediaQuery.of(context).size.width/1.1,
+          width: MediaQuery.of(context).size.width / 1.1,
           child: CarouselSlider(
             options: CarouselOptions(
               height: 190,
@@ -30,15 +28,17 @@ class _CarosilSliderWidgetState extends State<CarosilSliderWidget> {
               enlargeCenterPage: true,
               viewportFraction: 1.0,
               onPageChanged: (index, reason) {
-                setState(() {
-                  _currentIndex = index;
-                });
+                carouselProvider.updateIndex(index);
               },
             ),
             items: bannerImages.map((imagePath) {
               return ClipRRect(
                 borderRadius: BorderRadius.circular(13),
-                child: Image.asset(imagePath, fit: BoxFit.cover, width: double.infinity),
+                child: Image.asset(
+                  imagePath,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                ),
               );
             }).toList(),
           ),
@@ -49,11 +49,11 @@ class _CarosilSliderWidgetState extends State<CarosilSliderWidget> {
           children: List.generate(bannerImages.length, (index) {
             return Container(
               margin: EdgeInsets.symmetric(horizontal: 4),
-              width: _currentIndex == index ? 12 : 8,
+              width: carouselProvider.currentIndex == index ? 12 : 8,
               height: 8,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: _currentIndex == index ? AppColors.pink : AppColors.grey,
+                color: carouselProvider.currentIndex == index ? AppColors.pink : AppColors.grey,
               ),
             );
           }),

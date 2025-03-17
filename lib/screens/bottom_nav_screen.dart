@@ -1,20 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../provider/bottom_nav_provider.dart';
 import '../screens/home_page.dart';
 import '../screens/wishlist_page.dart';
 import '../screens/cart_page.dart';
 import '../screens/search_page.dart';
-
+import '../screens/onboading/settings_page.dart';
 import '../widgets/build_buttom_nav_widget.dart';
-import 'onboading/settings_page.dart';
-
-class BottomNavScreen extends StatefulWidget {
-  @override
-  _BottomNavScreenState createState() => _BottomNavScreenState();
-}
-
-class _BottomNavScreenState extends State<BottomNavScreen> {
-  int _selectedIndex = 0;
-
+class BottomNavScreen extends StatelessWidget {
   final List<Widget> _pages = [
     HomePage(),
     WishlistPage(),
@@ -25,14 +18,14 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bottomNavProvider = Provider.of<BottomNavProvider>(context);
+
     return Scaffold(
-      body: _pages[_selectedIndex],
+      body: _pages[bottomNavProvider.selectedIndex],
       bottomNavigationBar: BuildButtomNavWidget(
-        initialIndex: _selectedIndex,
+        initialIndex: bottomNavProvider.selectedIndex,
         onItemSelected: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
+          bottomNavProvider.setIndex(index);
         },
       ),
     );

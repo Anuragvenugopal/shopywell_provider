@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:provider/provider.dart';
+import '../../provider/sign_in_provider.dart';
 import '../../utils/app_colors.dart';
 import '../../widgets/build_elivated_button_widget.dart';
 import '../../widgets/build_text_feild_widget.dart';
@@ -10,45 +10,10 @@ import '../get_started_page.dart';
 import 'create_an_account_page.dart';
 import 'forgott_password.dart';
 
-class SignInPage extends StatefulWidget {
-  @override
-  State<SignInPage> createState() => _SignInPageState();
-}
-
-class _SignInPageState extends State<SignInPage> {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool isPasswordVisible = false;
-  bool isLoading = false;
-
-  Future<void> signIn() async {
-    if (!_formKey.currentState!.validate()) return;
-    setState(() {
-      isLoading = true;
-    });
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => GetStartedPage()),
-      );
-    } on FirebaseAuthException catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message ?? "Login failed")),
-      );
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
+class SignInPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final signInProvider = Provider.of<SignInProvider>(context);
     final double screenHeight = MediaQuery.of(context).size.height;
     final double screenWidth = MediaQuery.of(context).size.width;
 
@@ -59,7 +24,7 @@ class _SignInPageState extends State<SignInPage> {
           padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
           child: SingleChildScrollView(
             child: Form(
-              key: _formKey,
+              key: signInProvider.formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -76,7 +41,7 @@ class _SignInPageState extends State<SignInPage> {
                   ),
                   SizedBox(height: screenHeight * 0.04),
                   BuildTextFeildWidget(
-                    controller: emailController,
+                    controller: signInProvider.emailController,
                     hintText: "Username or Email",
                     prefixIcon: Icons.person_outline,
                     validator: (value) {
@@ -91,19 +56,15 @@ class _SignInPageState extends State<SignInPage> {
                   ),
                   SizedBox(height: screenHeight * 0.04),
                   BuildTextFeildWidget(
-                    controller: passwordController,
+                    controller: signInProvider.passwordController,
                     hintText: "Password",
                     prefixIcon: Icons.lock_outline,
-                    obscureText: !isPasswordVisible,
+                    obscureText: !signInProvider.isPasswordVisible,
                     suffixIcon: IconButton(
                       icon: Icon(
-                        isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                        signInProvider.isPasswordVisible ? Icons.visibility : Icons.visibility_off,
                       ),
-                      onPressed: () {
-                        setState(() {
-                          isPasswordVisible = !isPasswordVisible;
-                        });
-                      },
+                      onPressed: signInProvider.togglePasswordVisibility,
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -133,11 +94,17 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                   ),
                   SizedBox(height: screenHeight * 0.04),
-                  isLoading
+                  signInProvider.isLoading
                       ? CircularProgressIndicator()
                       : BuildElivatedButtonWidget(
                     text: "Login",
-                    onPressed: signIn,
+                    onPressed: () => signInProvider.signIn(
+                      context,
+                          () => Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => GetStartedPage()),
+                      ),
+                    ),
                     color: AppColors.button_color,
                   ),
                   SizedBox(height: screenHeight * 0.09),

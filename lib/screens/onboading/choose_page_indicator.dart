@@ -1,47 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:shopywelll/screens/onboading/sign_in_page.dart';
-
-import '../../utils/app_colors.dart';
+import 'package:provider/provider.dart';
+import 'package:shopywelll/utils/app_colors.dart';
+import '../../provider/choose_page_provider.dart';
+import '../../widgets/build_text_widget.dart';
 import '../get_started_page.dart';
 import 'choose_products_page.dart';
 import 'make_payment_page.dart';
 import 'get_your_order_page.dart';
-import '../../widgets/build_text_widget.dart';
 
-class ChoosePageIndicator extends StatefulWidget {
-  @override
-  _ChoosePageIndicatorPageState createState() => _ChoosePageIndicatorPageState();
-}
-
-class _ChoosePageIndicatorPageState extends State<ChoosePageIndicator> {
-  final PageController pageController = PageController();
-  int currentPage = 0;
-
-  void nextPage() {
-    if (currentPage < 2) {
-      pageController.nextPage(
-        duration: Duration(milliseconds: 500),
-        curve: Curves.ease,
-      );
-    } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => SignInPage()),
-      );
-    }
-  }
-
-  void prevPage() {
-    if (currentPage > 0) {
-      pageController.previousPage(
-        duration: Duration(milliseconds: 500),
-        curve: Curves.ease,
-      );
-    }
-  }
-
+class ChoosePageIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final pageProvider = Provider.of<ChoosePageProvider>(context);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -66,12 +37,8 @@ class _ChoosePageIndicatorPageState extends State<ChoosePageIndicator> {
             ),
             Expanded(
               child: PageView(
-                controller: pageController,
-                onPageChanged: (index) {
-                  setState(() {
-                    currentPage = index;
-                  });
-                },
+                controller: pageProvider.pageController,
+                onPageChanged: (index) => pageProvider.onPageChanged(index),
                 children: [
                   ChooseProductsPage(),
                   MakePaymentPage(),
@@ -82,11 +49,11 @@ class _ChoosePageIndicatorPageState extends State<ChoosePageIndicator> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween, // Align buttons properly
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  if (currentPage > 0)
+                  if (pageProvider.currentPage > 0)
                     TextButton(
-                      onPressed: prevPage,
+                      onPressed: pageProvider.prevPage,
                       child: BuildTextWidget(
                         text: "Prev",
                         fontSize: 15,
@@ -99,7 +66,7 @@ class _ChoosePageIndicatorPageState extends State<ChoosePageIndicator> {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: List.generate(3, (index) {
-                      bool isActive = currentPage == index;
+                      bool isActive = pageProvider.currentPage == index;
                       return AnimatedContainer(
                         duration: Duration(milliseconds: 300),
                         margin: EdgeInsets.symmetric(horizontal: 4),
@@ -112,11 +79,10 @@ class _ChoosePageIndicatorPageState extends State<ChoosePageIndicator> {
                       );
                     }),
                   ),
-
                   TextButton(
-                    onPressed: nextPage,
+                    onPressed: () => pageProvider.nextPage(context),
                     child: BuildTextWidget(
-                      text: currentPage == 2 ? "Get Started" : "Next",
+                      text: pageProvider.currentPage == 2 ? "Get Started" : "Next",
                       fontSize: 15,
                       color: AppColors.red,
                       fontWeight: FontWeight.bold,
